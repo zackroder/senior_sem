@@ -9,6 +9,9 @@ class FerrersGame:
             print ("O " * i)
             print("\n")
 
+    def returnGameState(self):
+        return self.subgames
+
     def showGameState(self):
         print("-----------CURRENT GAME STATE----------")
         print("Player " + str(self.currPlayer) + "'s turn")
