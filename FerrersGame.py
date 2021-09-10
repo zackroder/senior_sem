@@ -1,13 +1,29 @@
+from copy import copy, deepcopy
+
 class FerrersGame:
-    def __init__(self, dimensions):
+    __slots__ = 'a', '__dict__'
+    def __init__(self, dimensions = (), currPlayer = 1, subgames = None):
         self.subgames = []
-        self.subgames.append(dimensions)
-        self.currPlayer = 1
+        if subgames:
+            self.subgames = subgames
+        else:
+            self.subgames = []
+            self.subgames.append(dimensions)
+        self.currPlayer = currPlayer
+
+    def __hash__(self):
+        return hash(tuple(self.subgames))
+
+    def __eq__(self, other):
+        return (self.subgames) == (other.subgames)
     
-    def visualizeFerrers(self, subGame):
-        for i in subGame:
-            print ("O " * i)
-            print("\n")
+    def visualizeFerrers(self, subGameIndex):
+        if not self.subgames:
+            print("EMPTY")
+        else:
+            for i in self.subgames[subGameIndex]:
+                print ("O " * i)
+                print("\n")
 
     def returnGameState(self):
         return self.subgames
