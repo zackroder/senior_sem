@@ -46,9 +46,11 @@ def mex(numbers):
 
 #nim sum operator - takes list of nimbers, returns nim-sum
 def nimSum(nimbers):
-    nimsum = nimbers[0]
-    for i in range(1, len(nimbers)):
-        nimsum = nimsum ^ nimbers[i]
+    nimsum = 0 #0 is XOR identity; 0 XOR A = A
+    for i in nimbers:
+        nimsum = nimsum ^ i
+    
+    return nimsum
 
 #computes SG value of gameObj
 def SGValueRecursive(gameObj):
@@ -67,18 +69,22 @@ def SGValueRecursive(gameObj):
             childBoard = child.returnGameState()
             #print("child board: " + str(childBoard))
             #if game is made of multiple subgames, nim-sum them
+            #print("BOARD: " + str(childBoard))
             if len(childBoard) > 1:
                 #print("nim addition begin")
                 nimbersToNimSum = []
+                #print("NIM SUM")
+                #print(childBoard)
                 for subgame in childBoard:
-                    subgameObj = FerrersGame(subgames = copy(childBoard))
-
+                    subgameObj = FerrersGame(subgames = [copy(subgame)])
                     nimbersToNimSum.append(SGValueRecursive(subgameObj))
                 
+                #print("nim sum " + str(nimbersToNimSum))
                 childrenValues.append(nimSum(nimbersToNimSum))
-            
+                
             else:
                 childrenValues.append(SGValueRecursive(child))
+        
         sgValue = mex(childrenValues)
         sgValues[gameObj] = sgValue
         return sgValue
@@ -88,7 +94,21 @@ def SGValueRecursive(gameObj):
 
 
 def main():
-    game = FerrersGame((2,2))
+    superGame = []
+    for i in range(20):
+        superGame.append(20)
+    superGame = tuple(superGame)
+    game = FerrersGame(superGame)
+    
     print(SGValueRecursive(game))
+    keys = sgValues.keys()
+
+    with open("SGValues.txt", 'w') as f:
+        for key in keys:
+            f.write(str(key.subgames) + ": " + str(sgValues[key]) + '\n')
+
+    
+    
+    
 
 main()
