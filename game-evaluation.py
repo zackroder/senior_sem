@@ -94,11 +94,7 @@ def SGValueRecursive(gameObj):
 
 
 def main():
-    superGame = []
-    for i in range(20):
-        superGame.append(20)
-    superGame = tuple(superGame)
-    game = FerrersGame(superGame)
+    game = FerrersGame(dimensions=(4,4,4))
     
     print(SGValueRecursive(game))
     keys = sgValues.keys()
