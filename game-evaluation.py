@@ -89,19 +89,54 @@ def SGValueRecursive(gameObj):
         sgValues[gameObj] = sgValue
         return sgValue
 
-    
+#function to efficiently generate integer partitions: https://jeromekelleher.net/generating-integer-partitions.html
+def accel_asc(n):
+    a = [0 for i in range(n + 1)]
+    k = 1
+    y = n - 1
+    while k != 0:
+        x = a[k - 1] + 1
+        k -= 1
+        while 2 * x <= y:
+            a[k] = x
+            y -= x
+            k += 1
+        l = k + 1
+        while x <= y:
+            a[k] = x
+            a[l] = y
+            yield a[:k + 2]
+            x += 1
+            y -= 1
+        a[k] = x + y
+        y = x + y - 1
+        yield a[:k + 1]
             
 
 
 def main():
-    game = FerrersGame(dimensions=(4,4,4))
-    
-    print(SGValueRecursive(game))
-    keys = sgValues.keys()
 
-    with open("SGValues.txt", 'w') as f:
-        for key in keys:
-            f.write(str(key.subgames) + ": " + str(sgValues[key]) + '\n')
+    #for i in range(1,21):
+    #    dimensions = [i]
+    #    for j in range(0,i):
+    #        dimensions.append(1)
+    #    dimensions = tuple(dimensions)
+    #    
+    sgValueDict = dict()
+    for i in range(1,26):
+        for j in accel_asc(i):
+            part = tuple(reversed(j))
+            value = SGValueRecursive(FerrersGame(dimensions=part))
+            sgValueDict[part] = {"sg_value": value, "integer": i}
+
+    #game = FerrersGame(dimensions=(4,))
+    #print(SGValueRecursive(game))
+
+    keys = sgValueDict.keys()
+
+    with open("SGValuesTest1.txt", 'w') as f:
+        for key in sgValueDict:
+           f.write(str(key) + ": " + str(sgValueDict[key]) + '\n')
 
     
     

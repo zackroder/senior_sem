@@ -4,6 +4,7 @@ class FerrersGame:
     __slots__ = 'a', '__dict__'
     def __init__(self, dimensions = (), currPlayer = 1, subgames = None):
         self.subgames = []
+        self.dimensions = dimensions
         if subgames:
             self.subgames = subgames
         else:
