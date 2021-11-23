@@ -2,6 +2,7 @@
 
 from copy import deepcopy, copy
 from FerrersGame import FerrersGame
+import pandas as pd
 
 sgValues = {}
 
@@ -123,20 +124,24 @@ def main():
     #    dimensions = tuple(dimensions)
     #    
     sgValueDict = dict()
-    for i in range(1,26):
+    for i in range(1,31):
         for j in accel_asc(i):
             part = tuple(reversed(j))
             value = SGValueRecursive(FerrersGame(dimensions=part))
-            sgValueDict[part] = {"sg_value": value, "integer": i}
+            sgValueDict[str(part)] = {"sg_value": value, "integer": i}
 
     #game = FerrersGame(dimensions=(4,))
     #print(SGValueRecursive(game))
 
     keys = sgValueDict.keys()
 
-    with open("SGValuesTest1.txt", 'w') as f:
-        for key in sgValueDict:
-           f.write(str(key) + ": " + str(sgValueDict[key]) + '\n')
+    df = pd.DataFrame.from_dict(sgValueDict, orient='index')
+    print(df.head)
+    df.to_csv("SGValuesMasterTest1.csv")
+
+    #with open("SGValuesTest1.txt", 'w') as f:
+    #    for key in sgValueDict:
+    #       f.write(str(key) + ": " + str(sgValueDict[key]) + '\n')
 
     
     
