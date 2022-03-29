@@ -137,14 +137,34 @@ def main():
     sgValueDict = dict()
     for i in range(2,10):
         for j in range(2,10):
-            part = []
-            for k in range(2,j+1):
-                part.append(i)
-            part = tuple(part)
+            
+            rectPart = [i] * j
+
+            #compute SG of rectangle partition
+            part = tuple(rectPart)
             print(part)
             quadrated = isQuadrated(part)
             value = SGValueRecursive(FerrersGame(dimensions=part))
             sgValueDict[str(part)] = {"sg_value": value, "quadrated": quadrated}
+
+            
+            lastRowIndex = j-1
+            up = 0
+            while rectPart[lastRowIndex] > 1:
+                rectPart[lastRowIndex] -= 1
+                if up > 0:
+                    rectPart[lastRowIndex-up] -= 1
+
+                part = tuple(rectPart)
+                print(part)
+                quadrated = isQuadrated(part)
+                value = SGValueRecursive(FerrersGame(dimensions=part))
+                sgValueDict[str(part)] = {"sg_value": value, "quadrated": quadrated}
+        
+                up += 1
+            
+            
+            
 
     #game = FerrersGame(dimensions=(4,))
     #print(SGValueRecursive(game))
@@ -153,7 +173,7 @@ def main():
 
     df = pd.DataFrame.from_dict(sgValueDict, orient='index')
     print(df.head)
-    df.to_csv("SGValuesRectangles.csv")
+    df.to_csv("SGValuesDegenerateStaircases.csv")
 
     #with open("SGValuesTest1.txt", 'w') as f:
     #    for key in sgValueDict:
